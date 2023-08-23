@@ -139,6 +139,8 @@ if len(all_extracted_csv_data) > 0:
             df["E (eV)"] = round(df["E (eV)"],1) # If it has more than one decimal place, we keep the first decimal place by rounding up. 
             df["E (eV)"] = df["E (eV)"].astype(str).apply(lambda x: x.split('.0')[0] if x.endswith('.0') else x) # If the result is, for example, 45.0, we are left with only 45
             df.rename(columns={"E (eV)": "E (MEV)"}, inplace=True)
+        if "y:Value" in df.columns:
+            df = df[df["y:Value"] != "Data(NO-DIM)"] #We delete the data that we don't want.
 
 ### IMPORTANT: This part is very important! Note that we filter the values with the identifier of the energy to be studied. 
 ### There may be cases where there is more than one energy in the csv. You also have to keep in mind that the value to be used 
