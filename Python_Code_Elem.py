@@ -10,6 +10,7 @@ import glob
 import os
 import numpy as np
 from periodictable import elements
+import sys
 
 ### To use Latex in python
 plt.rcParams['text.usetex'] = True
@@ -147,6 +148,7 @@ if len(all_extracted_csv_data) > 0:
         all_extracted_csv_data[df_idx] = df
 else:
     print("No CSV data found.")
+    sys.exit()
 
 # Gather all the dataframes in one and then transform it into a list.
 all_extracted_csv_data = pd.concat(all_extracted_csv_data, ignore_index=True).to_dict(orient='records')    
@@ -161,7 +163,7 @@ just_in_case = 10 #To take a wide range, just in case.
 max_theta = int(max(theta_values_csv) + just_in_case)
 
 # Create a unique list of MEV values
-unique_mev_values = list(set(MEV_values + MEV_values_csv))
+unique_mev_values = sorted(list(set(MEV_values + MEV_values_csv)),key=lambda x: float(x))
 
 # Create a plot for all MEV values
 plt.figure()  # Create a single figure for the entire plot
@@ -180,6 +182,26 @@ color_palette = plt.colormaps['tab10']
 color_iterator = iter(color_palette(np.linspace(0, 1, len(unique_mev_values))))
  
 for mev in unique_mev_values:
+    # We multiply it by powers of 10 for better visualisation. 
+    power_of_10 = len(unique_mev_values) - idx - 1
+
+    label_teoria = f'Theor. data (E = {mev} MeV)'
+    if power_of_10 == 0:
+        label_teoria += ''
+    elif power_of_10 == 1:
+        label_teoria += f' $\\times 10$'
+    else:
+        label_teoria += f' $\\times 10^{{{power_of_10}}}$'
+        
+    
+    label_exp = f'Exp. data (E = {mev} MeV)'
+    if power_of_10 == 0:
+        label_exp += ''
+    elif power_of_10 == 1:
+        label_exp += f' $\\times 10$'
+    else:
+        label_exp += f' $\\times 10^{{{power_of_10}}}$'
+    
     # Filter values corresponding to each MEV value and max_theta
     theta_values_filtered = [theta for theta, e in zip(theta_values, MEV_values) if e == mev and 1 <= theta <= max_theta]
     dcs_values_filtered = [dcs for theta, dcs, e in zip(theta_values, dcs_values, MEV_values) if e == mev and 1 <= theta <= max_theta]
@@ -190,8 +212,8 @@ for mev in unique_mev_values:
     color = next(color_iterator)
 
     # Plot values for each dataset with appropriate markers and labels
-    plt.plot(theta_values_filtered, dcs_values_filtered, linewidth=line_width, color = color, label=f'Theor. data (E = {mev} MeV)')
-    plt.plot(theta_values_csv_filtered, dcs_values_csv_filtered, marker=csv_marker, markersize = csv_marker_size, linestyle='None',color = color, label=f'Exp. data (E = {mev} MeV)')
+    plt.plot(theta_values_filtered, dcs_values_filtered, linewidth=line_width, color=color, label= label_teoria)
+    plt.plot(theta_values_csv_filtered, dcs_values_csv_filtered, marker=csv_marker, markersize=csv_marker_size, linestyle='None', color=color, label= label_exp)
 
 plt.xlabel(r'$\theta$ (deg)')
 plt.ylabel('d$\sigma$/d$\Omega$  $(cm^2/sr)$')
