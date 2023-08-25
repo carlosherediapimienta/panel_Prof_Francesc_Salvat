@@ -172,8 +172,6 @@ plt.figure()  # Create a single figure for the entire plot
 plt.title(f"{element.symbol}$^{{{atomic_mass}}}$, elastic")
 
 # Diferent types of markers
-csv_markers = ['o', 's', 'D', '^', 'v', '>', '<', 'p', 'H', 'x']
-csv_marker_iterator = iter(csv_markers)
 csv_marker_size = 3
 
 # Lines
@@ -210,12 +208,11 @@ for mev in unique_mev_values:
     theta_values_csv_filtered = [theta for theta, e in zip(theta_values_csv, MEV_values_csv) if e == mev and 1 <= theta <= max_theta]
     dcs_values_csv_filtered = [dcs for theta, dcs, e in zip(theta_values_csv, dcs_values_csv, MEV_values_csv) if e == mev and 1 <= theta <= max_theta]
     
-    csv_marker = next(csv_marker_iterator)
     color = next(color_iterator)
 
     # Plot values for each dataset with appropriate markers and labels
     plt.plot(theta_values_filtered, dcs_values_filtered, linewidth=line_width, color=color, label= label_teoria)
-    plt.plot(theta_values_csv_filtered, dcs_values_csv_filtered, marker=csv_marker, markersize=csv_marker_size, linestyle='None', color=color, label= label_exp)
+    plt.plot(theta_values_csv_filtered, dcs_values_csv_filtered, marker='o', markersize=csv_marker_size, linestyle='None', color=color, label= label_exp)
 
 plt.xlabel(r'$\theta$ (deg)')
 plt.ylabel('d$\sigma$/d$\Omega$  $(cm^2/sr)$')
