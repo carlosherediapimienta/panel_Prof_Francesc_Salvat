@@ -1,4 +1,4 @@
-#  Colaboration: Prof. Francesc Salvat (University of Barcelona)
+#  Collaboration: Prof. Francesc Salvat (University of Barcelona)
 Collaboration with Professor Francesc Salvat, University of Barcelona, Physics.
 
 Article that refers: "Electromagnetic interaction models for Monte Carlo simulation of protons and alpha particles", arXiv: 2310.03357 [nucl-th]
